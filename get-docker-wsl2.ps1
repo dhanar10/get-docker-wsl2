@@ -35,10 +35,8 @@ Invoke-WebRequest "https://download.docker.com/win/static/stable/x86_64/docker-$
 Expand-Archive .\docker.zip C:\ -Force
 rm .\docker.zip
 
-$userPaths = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User) -split ';'
-if ($userPaths -notcontains "C:\docker") {
-  $userPaths = $userPaths + "C:\docker" | where { $_ }
-  [Environment]::SetEnvironmentVariable('Path', $userPaths -join ';', $containerType)
+if ($env:path -notmatch "C:\\docker") {
+  [Environment]::SetEnvironmentVariable("Path", "$($env:path);C:\docker", [System.EnvironmentVariableTarget]::User)
 }
 [Environment]::SetEnvironmentVariable("DOCKER_HOST", "tcp://127.0.0.1:2375", [EnvironmentVariableTarget]::User)
 
